@@ -1,0 +1,55 @@
+name: Go CI (Lint + Test)
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  build:
+    name: Lint, Vet & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Check code formatting
+        run: |
+          echo "Checking formatting..."
+          UNFORMATTED=$(gofmt -l .)
+          if [ -n "$UNFORMATTED" ]; then
+            echo "The following files are not formatted:"
+            echo "$UNFORMATTED"
+            echo "Run: go fmt ./..."
+            exit 1
+          fi
+          echo "Code formatting is clean."
+
+      - name: Run go vet
+        run: |
+          echo "Running go vet..."
+          go vet ./...
+          echo "go vet passed."
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          args: run ./...
+
+      - name: Run unit tests
+        run: |
+          echo "Running tests..."
+          go test -v -coverprofile=coverage.out ./...
+          go tool cover -func=coverage.out
+
