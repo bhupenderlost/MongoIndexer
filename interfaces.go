@@ -1,3 +1,7 @@
+// Copyright (c) 2025 Bhupender Singh
+// Use of this source code is governed by the MIT License
+// that can be found in the LICENSE file.
+
 package mongoindexer
 
 import (
