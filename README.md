@@ -171,3 +171,8 @@ When executed with the example `User` struct, the following indexes are created:
 4. Push and open a PR
 
 ---
+
+## License
+
+Licensed under the MIT License.  
+See [LICENSE](./LICENSE) for more information.
